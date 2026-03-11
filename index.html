@@ -6,9 +6,9 @@
 <title>🦉 Muskan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Mrs+Saint+Delafield&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/main.css?v=6"/>
-<link rel="stylesheet" href="css/aurora.css?v=6"/>
-<link rel="stylesheet" href="css/panels.css?v=6"/>
+<link rel="stylesheet" href="css/main.css?v=10"/>
+<link rel="stylesheet" href="css/aurora.css?v=10"/>
+<link rel="stylesheet" href="css/panels.css?v=10"/>
 </head>
 <body>
 
@@ -50,27 +50,28 @@
   <div class="orb orb-3"></div>
 </section>
 
-<!-- NAV — outside #app, always on top -->
-<nav id="edge-nav" style="display:none">
-  <div class="nav-logo">🦉</div>
-  <button class="nav-item active" data-view="sky" onclick="switchView('sky',this)">✦ Sky</button>
-  <button class="nav-item" data-view="constellation" onclick="switchView('constellation',this)">⋆ Stories</button>
-  <button class="nav-item" data-view="garden" onclick="switchView('garden',this)">❋ Gifts</button>
-  <button class="nav-item" data-view="upload" onclick="switchView('upload',this)">↑ Add</button>
+<!-- NAV: direct child of body, nothing can block it -->
+<nav id="edge-nav" style="display:none;position:fixed;top:0;left:0;right:0;height:52px;z-index:99999;background:#06020f;border-bottom:1px solid rgba(255,255,255,.1);display:none;align-items:center;padding:0 12px;gap:6px;">
+  <span style="font-size:1.2rem;margin-right:8px">🦉</span>
+  <button onclick="switchView('sky',this)" data-view="sky" class="nb">Sky</button>
+  <button onclick="switchView('constellation',this)" data-view="constellation" class="nb">Stories</button>
+  <button onclick="switchView('garden',this)" data-view="garden" class="nb">Gifts</button>
+  <button onclick="switchView('upload',this)" data-view="upload" class="nb">Add</button>
 </nav>
 
-<!-- ═══ APP SHELL (hidden until enter) ═══ -->
+<!-- FOLDER PILLS for sky — direct body child, above everything -->
+<div id="sky-ui" style="display:none;position:fixed;top:60px;left:16px;right:16px;z-index:99998;">
+  <div id="folder-orbit" class="folder-orbit"></div>
+</div>
+
+<!-- APP SHELL -->
 <div id="app" class="hidden">
 
-  <!-- ─── SKY VIEW (photo constellation) ─── -->
+  <!-- SKY VIEW -->
   <div class="view active" id="view-sky">
-    <!-- sky-ui inside view-sky, pills need pointer-events -->
-    <div id="sky-ui">
-      <div id="sky-header">
-        <h2 class="view-title">Our <em>Sky</em></h2>
-        <p class="view-sub">Every memory is a star. Click one to relive it.</p>
-      </div>
-      <div id="folder-orbit" class="folder-orbit"></div>
+    <div style="position:absolute;top:60px;left:16px;pointer-events:none">
+      <h2 class="view-title">Our <em>Sky</em></h2>
+      <p class="view-sub">Every memory is a star. Click one to relive it.</p>
     </div>
     <div id="sky-empty" class="sky-empty hidden">
       <div class="se-owl">🦉</div>
@@ -78,7 +79,7 @@
     </div>
   </div>
 
-  <!-- ─── CONSTELLATION / STORIES ─── -->
+  <!-- STORIES -->
   <div class="view" id="view-constellation">
     <div class="view-inner">
       <h2 class="view-title">Our <em>Constellations</em></h2>
@@ -88,7 +89,7 @@
     </div>
   </div>
 
-  <!-- ─── GARDEN / GIFTS ─── -->
+  <!-- GIFTS -->
   <div class="view" id="view-garden">
     <div class="view-inner">
       <h2 class="view-title">The <em>Garden</em></h2>
@@ -98,12 +99,11 @@
     </div>
   </div>
 
-  <!-- ─── UPLOAD VIEW ─── -->
+  <!-- UPLOAD -->
   <div class="view" id="view-upload">
     <div class="view-inner upload-center">
       <h2 class="view-title">Add to the <em>Sky</em></h2>
       <p class="view-sub">Choose a constellation to place your star in.</p>
-
       <div id="upload-orb" class="upload-orb" onclick="document.getElementById('file-in').click()">
         <div class="uo-inner">
           <span class="uo-icon">✦</span>
@@ -114,7 +114,6 @@
         <div class="uo-ring r3"></div>
       </div>
       <input type="file" id="file-in" multiple accept="image/*,video/*" style="display:none"/>
-
       <div class="folder-pick">
         <div class="fp-label">Place in constellation:</div>
         <div id="fp-pills" class="fp-pills"></div>
@@ -123,7 +122,6 @@
           <button class="ghost-btn" onclick="addFolder()">create</button>
         </div>
       </div>
-
       <div id="upload-queue" class="upload-queue"></div>
     </div>
   </div>
@@ -208,6 +206,6 @@
 <script src="js/stories.js?v=5"></script>
 <script src="js/gifts.js?v=5"></script>
 <script src="js/upload.js?v=5"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/app.js?v=11"></script>
 </body>
 </html>

@@ -12,10 +12,10 @@ window.addEventListener('DOMContentLoaded', () => {
   startQuoteRain();
   initEdgeNav();
 
-  // make sky canvas interactive immediately
+  // sky canvas starts hidden — only active on sky view
   const skyCv = document.getElementById('sky-canvas');
-  skyCv.style.pointerEvents = 'all';
-  skyCv.style.opacity = '1';
+  skyCv.style.pointerEvents = 'none';
+  skyCv.style.display = 'none';
 
   // SVG gradient for progress ring
   const svg = document.querySelector('#progress-ring svg');
