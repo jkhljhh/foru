@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🦉 Muskan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Mrs+Saint+Delafield&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/main.css"/>
+<link rel="stylesheet" href="css/aurora.css"/>
+<link rel="stylesheet" href="css/panels.css"/>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cur"></div>
+<div id="cur-aura"></div>
+
+<!-- AURORA HERO CANVAS -->
+<canvas id="aurora-canvas"></canvas>
+
+<!-- CONSTELLATION CANVAS (memories as stars) -->
+<canvas id="sky-canvas"></canvas>
+
+<!-- GRAIN -->
+<div id="grain"></div>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div id="hero-content">
+    <div id="hero-owl">🦉</div>
+    <h1 id="hero-name">
+      <span class="letter-wrap"><span class="letter">M</span></span>
+      <span class="letter-wrap"><span class="letter">u</span></span>
+      <span class="letter-wrap"><span class="letter">s</span></span>
+      <span class="letter-wrap"><span class="letter">k</span></span>
+      <span class="letter-wrap"><span class="letter">a</span></span>
+      <span class="letter-wrap"><span class="letter">n</span></span>
+    </h1>
+    <p id="hero-verse">every star up there has a story<br/>and so do we</p>
+    <div id="hero-enter" onclick="enterApp()">
+      <span>enter our universe</span>
+      <div id="enter-ring"></div>
+    </div>
+  </div>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</section>
+
+<!-- ═══ APP SHELL (hidden until enter) ═══ -->
+<div id="app" class="hidden">
+
+  <!-- EDGE NAV — appears on mouse to left -->
+  <nav id="edge-nav">
+    <div class="nav-logo">🦉</div>
+    <button class="nav-item active" data-view="sky" onclick="switchView('sky',this)">
+      <span class="ni-icon">✦</span>
+      <span class="ni-label">Sky</span>
+    </button>
+    <button class="nav-item" data-view="constellation" onclick="switchView('constellation',this)">
+      <span class="ni-icon">⋆</span>
+      <span class="ni-label">Stories</span>
+    </button>
+    <button class="nav-item" data-view="garden" onclick="switchView('garden',this)">
+      <span class="ni-icon">❋</span>
+      <span class="ni-label">Gifts</span>
+    </button>
+    <button class="nav-item" data-view="upload" onclick="switchView('upload',this)">
+      <span class="ni-icon">↑</span>
+      <span class="ni-label">Add</span>
+    </button>
+  </nav>
+
+  <!-- ─── SKY VIEW (photo constellation) ─── -->
+  <div class="view active" id="view-sky">
+    <div id="sky-ui">
+      <div id="sky-header">
+        <h2 class="view-title">Our <em>Sky</em></h2>
+        <p class="view-sub">Every memory is a star. Click one to relive it.</p>
+      </div>
+      <div id="folder-orbit" class="folder-orbit"></div>
+    </div>
+    <!-- Stars rendered on sky-canvas -->
+    <div id="sky-empty" class="sky-empty hidden">
+      <div class="se-owl">🦉</div>
+      <p>The sky is empty — add your first memory above</p>
+    </div>
+  </div>
+
+  <!-- ─── CONSTELLATION / STORIES ─── -->
+  <div class="view" id="view-constellation">
+    <div class="view-inner">
+      <h2 class="view-title">Our <em>Constellations</em></h2>
+      <p class="view-sub">Stories written under the stars.</p>
+      <div id="story-orbs"></div>
+      <button class="fab" onclick="openStoryCompose()">+ new story</button>
+    </div>
+  </div>
+
+  <!-- ─── GARDEN / GIFTS ─── -->
+  <div class="view" id="view-garden">
+    <div class="view-inner">
+      <h2 class="view-title">The <em>Garden</em></h2>
+      <p class="view-sub">Every gift, blooming forever.</p>
+      <div id="gift-blooms"></div>
+      <button class="fab" onclick="openGiftCompose()">+ new gift</button>
+    </div>
+  </div>
+
+  <!-- ─── UPLOAD VIEW ─── -->
+  <div class="view" id="view-upload">
+    <div class="view-inner upload-center">
+      <h2 class="view-title">Add to the <em>Sky</em></h2>
+      <p class="view-sub">Choose a constellation to place your star in.</p>
+
+      <div id="upload-orb" class="upload-orb" onclick="document.getElementById('file-in').click()">
+        <div class="uo-inner">
+          <span class="uo-icon">✦</span>
+          <span class="uo-text">drop files here<br/>or tap to choose</span>
+        </div>
+        <div class="uo-ring r1"></div>
+        <div class="uo-ring r2"></div>
+        <div class="uo-ring r3"></div>
+      </div>
+      <input type="file" id="file-in" multiple accept="image/*,video/*" style="display:none"/>
+
+      <div class="folder-pick">
+        <div class="fp-label">Place in constellation:</div>
+        <div id="fp-pills" class="fp-pills"></div>
+        <div class="fp-new">
+          <input id="fp-new-inp" class="ghost-inp" placeholder="or name a new one…"/>
+          <button class="ghost-btn" onclick="addFolder()">create</button>
+        </div>
+      </div>
+
+      <div id="upload-queue" class="upload-queue"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ LIGHTBOX ═══ -->
+<div id="lightbox" class="hidden">
+  <canvas id="supernova-canvas"></canvas>
+  <button id="lb-close" onclick="closeLightbox()">✕</button>
+  <button id="lb-prev" onclick="lbNav(-1)">‹</button>
+  <div id="lb-media">
+    <img id="lb-img" src="" alt=""/>
+    <video id="lb-vid" controls></video>
+  </div>
+  <button id="lb-next" onclick="lbNav(1)">›</button>
+  <div id="lb-info">
+    <div id="lb-name"></div>
+    <div id="lb-pos"></div>
+  </div>
+  <div id="lb-swipe-hint">swipe or use arrow keys</div>
+</div>
+
+<!-- ═══ STORY COMPOSE PANEL ═══ -->
+<div id="story-panel" class="side-panel hidden">
+  <div class="sp-inner">
+    <button class="sp-close" onclick="closePanel('story-panel')">✕</button>
+    <div class="sp-eyebrow">new story</div>
+    <input id="story-title" class="sp-title-inp" placeholder="A title for this memory…"/>
+    <div id="story-date" class="sp-date"></div>
+    <textarea id="story-body" class="sp-body" placeholder="Let the words come…"></textarea>
+    <button class="sp-save" onclick="saveStory()">preserve this moment ✦</button>
+  </div>
+</div>
+
+<!-- ═══ GIFT COMPOSE PANEL ═══ -->
+<div id="gift-panel" class="side-panel hidden">
+  <div class="sp-inner">
+    <button class="sp-close" onclick="closePanel('gift-panel')">✕</button>
+    <div class="sp-eyebrow">new gift</div>
+    <div class="gift-form">
+      <input id="g-icon" class="sp-icon-inp" placeholder="🎁"/>
+      <input id="g-name" class="sp-title-inp" placeholder="What was this gift?"/>
+      <input id="g-occ" class="sp-sub-inp" placeholder="The occasion…"/>
+      <textarea id="g-note" class="sp-body" placeholder="The story behind it…" rows="3"></textarea>
+    </div>
+    <button class="sp-save" onclick="saveGift()">plant this gift ❋</button>
+  </div>
+</div>
+
+<!-- ═══ STORY READ PANEL ═══ -->
+<div id="story-read-panel" class="side-panel hidden">
+  <div class="sp-inner">
+    <button class="sp-close" onclick="closePanel('story-read-panel')">✕</button>
+    <div id="srp-date" class="sp-date"></div>
+    <div id="srp-title" class="srp-title"></div>
+    <div id="srp-body" class="srp-body"></div>
+    <button class="sp-delete" id="srp-del">delete</button>
+  </div>
+</div>
+
+<!-- PROGRESS RING -->
+<div id="progress-ring" class="hidden">
+  <svg viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="34" class="pr-track"/>
+    <circle cx="40" cy="40" r="34" class="pr-fill" id="pr-fill"/>
+  </svg>
+  <span id="pr-text">0%</span>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- SPARKS canvas (click effects) -->
+<canvas id="sparks-canvas"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/aurora.js"></script>
+<script src="js/sky.js"></script>
+<script src="js/lightbox.js"></script>
+<script src="js/stories.js"></script>
+<script src="js/gifts.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

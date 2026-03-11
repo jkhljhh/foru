@@ -1,0 +1,162 @@
+// app.js — main boot, hero, view switching, quotes, utils
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BOOT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+window.addEventListener('DOMContentLoaded', () => {
+  initAurora();
+  initCursor();
+  initSparks();
+  initSky();
+  initLightbox();
+  initUpload();
+  loadFolders();
+  animateHeroLetters();
+  startQuoteRain();
+  initEdgeNav();
+
+  // SVG gradient for progress ring
+  const svg = document.querySelector('#progress-ring svg');
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  defs.innerHTML = `<linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%"   stop-color="#ff2d6b"/>
+    <stop offset="100%" stop-color="#d4a843"/>
+  </linearGradient>`;
+  svg.prepend(defs);
+  document.querySelector('.pr-fill').style.stroke = 'url(#ring-grad)';
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HERO LETTER STAGGER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function animateHeroLetters() {
+  document.querySelectorAll('.letter').forEach((l, i) => {
+    setTimeout(() => l.classList.add('in'), 200 + i * 80);
+  });
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ENTER APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+async function enterApp() {
+  emitSparks(innerWidth / 2, innerHeight / 2, 30, '#d4a843');
+
+  // load data while transitioning
+  loadStories();
+  loadGifts();
+  await loadSkyMedia();
+
+  document.getElementById('hero').classList.add('out');
+  setTimeout(() => {
+    document.getElementById('hero').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+  }, 800);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   EDGE NAV
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function initEdgeNav() {
+  const nav = document.getElementById('edge-nav');
+  // peek on left-edge hover
+  document.addEventListener('mousemove', e => {
+    if (e.clientX < 20) nav.classList.add('peek');
+    else if (e.clientX > 90) nav.classList.remove('peek');
+  });
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VIEW SWITCHING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function switchView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  // sky canvas only visible on sky view
+  const skyCv = document.getElementById('sky-canvas');
+  skyCv.style.pointerEvents = name === 'sky' ? 'all' : 'none';
+  skyCv.style.opacity = name === 'sky' ? '1' : '0';
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PANEL HELPERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function openPanel(id) {
+  document.getElementById(id).classList.remove('hidden');
+  requestAnimationFrame(() => document.getElementById(id).classList.add('open'));
+}
+function closePanel(id) {
+  document.getElementById(id).classList.remove('open');
+  setTimeout(() => document.getElementById(id).classList.add('hidden'), 550);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOAST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+let toastTimer;
+function showToast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = type; }, 3200);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FLOATING LOVE QUOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const QUOTES = [
+  'you are my favourite kind of forever',
+  'every heartbeat whispers your name',
+  'in a room full of art, I\'d still stare at you',
+  'with you, even silence feels like music',
+  'you are the reason I believe in magic',
+  'my heart knew you before my eyes did',
+  '🦉 even your name sounds like a smile',
+  'I choose you, every single time',
+  'you are home',
+  'every moment with you is a universe',
+  'the world is more beautiful because you exist',
+  'you are the poem I never knew how to write',
+];
+let qIdx = 0;
+
+function startQuoteRain() {
+  function drop() {
+    const q = document.createElement('div');
+    q.style.cssText = `
+      position: fixed;
+      z-index: 600;
+      pointer-events: none;
+      font-family: 'Mrs Saint Delafield', cursive;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: rgba(255,45,107,.35);
+      text-shadow: 0 0 30px rgba(255,45,107,.2);
+      left: ${6 + Math.random() * 78}%;
+      top:  ${10 + Math.random() * 70}%;
+      animation: quoteFade 7s ease forwards;
+      max-width: 260px;
+      text-align: center;
+      line-height: 1.4;
+    `;
+    q.textContent = QUOTES[qIdx % QUOTES.length]; qIdx++;
+    document.body.appendChild(q);
+    setTimeout(() => q.remove(), 7200);
+    setTimeout(drop, 11000 + Math.random() * 9000);
+  }
+  setTimeout(drop, 6000);
+
+  // inject keyframe
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes quoteFade {
+      0%   { opacity:0; transform: translateY(14px) scale(.97); }
+      12%  { opacity:1; transform: translateY(0) scale(1); }
+      80%  { opacity:.8; }
+      100% { opacity:0; transform: translateY(-22px); }
+    }
+  `;
+  document.head.appendChild(s);
+}
