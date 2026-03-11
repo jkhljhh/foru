@@ -51,11 +51,7 @@ async function enterApp() {
 }
 
 function initEdgeNav() {
-  const nav = document.getElementById('edge-nav');
-  document.addEventListener('mousemove', e => {
-    if (e.clientX < 20) nav.classList.add('peek');
-    else if (e.clientX > 90) nav.classList.remove('peek');
-  });
+  // nav is always visible — nothing to do
 }
 
 function switchView(name, btn) {
