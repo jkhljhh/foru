@@ -222,7 +222,7 @@ body.cursor-big #cur-aura {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #app {
   position: fixed; inset: 0; z-index: 15;
-  pointer-events: none;
+  pointer-events: all;
   transition: opacity .6s;
 }
 #app.hidden { opacity: 0; pointer-events: none; }
@@ -313,10 +313,10 @@ body.cursor-big #cur-aura {
   position: absolute; inset: 0;
   display: none;
   padding-left: var(--nav-w);
-  pointer-events: none;
-}
-.view:not(#view-sky) {
   pointer-events: all;
+}
+#view-sky {
+  pointer-events: none;
 }
 .view.active { display: block; }
 .view-inner {

@@ -66,16 +66,13 @@ function switchView(name, btn) {
 
   // show/hide sky canvas
   const skyCv = document.getElementById('sky-canvas');
-  const app   = document.getElementById('app');
   if (name === 'sky') {
     skyCv.style.pointerEvents = 'all';
     skyCv.style.opacity = '1';
-    app.style.pointerEvents = 'none'; // let canvas underneath receive clicks
     placeStars();
   } else {
     skyCv.style.pointerEvents = 'none';
     skyCv.style.opacity = '0';
-    app.style.pointerEvents = 'all'; // enable all buttons in other views
   }
 }
 
