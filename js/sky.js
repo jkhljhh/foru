@@ -242,9 +242,9 @@ function onSkyClick(e) {
   const hit  = starAt(e.clientX - rect.left, e.clientY - rect.top);
   if (hit) {
     emitSparks(e.clientX, e.clientY, 16, '#ff2d6b');
-    const idx = (skyFolder === 'All' ? skyMedia : skyMedia.filter(m => m.folder === skyFolder))
-      .findIndex(m => m.name === hit.media.name);
-    openLightbox(idx);
+    const items = getLbItems();
+    const idx = items.findIndex(m => m.url === hit.media.url);
+    if (idx !== -1) openLightbox(idx);
   }
 }
 
@@ -253,9 +253,9 @@ function onSkyTouch(e) {
   const rect = skyCanvas.getBoundingClientRect();
   const hit = starAt(t.clientX - rect.left, t.clientY - rect.top);
   if (hit) {
-    const idx = (skyFolder === 'All' ? skyMedia : skyMedia.filter(m => m.folder === skyFolder))
-      .findIndex(m => m.name === hit.media.name);
-    openLightbox(idx);
+    const items = getLbItems();
+    const idx = items.findIndex(m => m.url === hit.media.url);
+    if (idx !== -1) openLightbox(idx);
   }
 }
 
@@ -299,10 +299,13 @@ async function scanBucket(prefix, items) {
       await scanBucket(prefix + it.name + '/', data || []);
     } else {
       const { data: { publicUrl } } = sb.storage.from('memories').getPublicUrl(prefix + it.name);
+      // skip Supabase empty-folder placeholder files
+      if (it.name === '.emptyFolderPlaceholder') return;
       const isVid = /\.(mp4|webm|mov|avi)$/i.test(it.name);
       skyMedia.push({
         url: publicUrl,
         name: it.name,
+        fullPath: prefix + it.name,
         folder: prefix ? prefix.replace(/\/$/, '') : 'All',
         type: isVid ? 'video' : 'image'
       });

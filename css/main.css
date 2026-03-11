@@ -93,7 +93,7 @@ body.cursor-big #cur-aura {
   pointer-events: none;
 }
 #aurora-canvas { z-index: 0; }
-#sky-canvas    { z-index: 10; }
+#sky-canvas    { z-index: 20; }
 #sparks-canvas { z-index: 99990; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -222,6 +222,7 @@ body.cursor-big #cur-aura {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #app {
   position: fixed; inset: 0; z-index: 15;
+  pointer-events: none;
   transition: opacity .6s;
 }
 #app.hidden { opacity: 0; pointer-events: none; }
@@ -230,6 +231,7 @@ body.cursor-big #cur-aura {
    EDGE NAV
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #edge-nav {
+  pointer-events: all;
   position: fixed;
   left: 0; top: 0; bottom: 0;
   width: var(--nav-w);
@@ -311,6 +313,10 @@ body.cursor-big #cur-aura {
   position: absolute; inset: 0;
   display: none;
   padding-left: var(--nav-w);
+  pointer-events: none;
+}
+.view:not(#view-sky) {
+  pointer-events: all;
 }
 .view.active { display: block; }
 .view-inner {
@@ -348,11 +354,11 @@ body.cursor-big #cur-aura {
    SKY VIEW HEADER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #sky-ui {
-  position: absolute;
+  position: fixed;
   top: 2rem;
   left: calc(var(--nav-w) + 2rem);
   right: 2rem;
-  z-index: 12;
+  z-index: 25;
   pointer-events: none;
 }
 #sky-header { margin-bottom: 1.5rem; }
@@ -361,6 +367,8 @@ body.cursor-big #cur-aura {
   flex-wrap: wrap;
   gap: .5rem;
   pointer-events: all;
+  position: relative;
+  z-index: 26;
 }
 .fo-pill {
   background: none;
