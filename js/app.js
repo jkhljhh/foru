@@ -1,8 +1,5 @@
 // app.js — main boot, hero, view switching, quotes, utils
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BOOT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 window.addEventListener('DOMContentLoaded', () => {
   initAurora();
   initCursor();
@@ -15,6 +12,11 @@ window.addEventListener('DOMContentLoaded', () => {
   startQuoteRain();
   initEdgeNav();
 
+  // make sky canvas interactive immediately
+  const skyCv = document.getElementById('sky-canvas');
+  skyCv.style.pointerEvents = 'all';
+  skyCv.style.opacity = '1';
+
   // SVG gradient for progress ring
   const svg = document.querySelector('#progress-ring svg');
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
@@ -26,22 +28,15 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.pr-fill').style.stroke = 'url(#ring-grad)';
 });
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   HERO LETTER STAGGER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function animateHeroLetters() {
   document.querySelectorAll('.letter').forEach((l, i) => {
     setTimeout(() => l.classList.add('in'), 200 + i * 80);
   });
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ENTER APP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 async function enterApp() {
   emitSparks(innerWidth / 2, innerHeight / 2, 30, '#d4a843');
 
-  // load data while transitioning
   loadStories();
   loadGifts();
   await loadSkyMedia();
@@ -50,39 +45,38 @@ async function enterApp() {
   setTimeout(() => {
     document.getElementById('hero').style.display = 'none';
     document.getElementById('app').classList.remove('hidden');
+    // ensure sky is active and canvas is on
+    switchView('sky', document.querySelector('[data-view="sky"]'));
   }, 800);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   EDGE NAV
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function initEdgeNav() {
   const nav = document.getElementById('edge-nav');
-  // peek on left-edge hover
   document.addEventListener('mousemove', e => {
     if (e.clientX < 20) nav.classList.add('peek');
     else if (e.clientX > 90) nav.classList.remove('peek');
   });
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   VIEW SWITCHING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function switchView(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
 
-  // sky canvas only visible on sky view
+  // show/hide sky canvas
   const skyCv = document.getElementById('sky-canvas');
-  skyCv.style.pointerEvents = name === 'sky' ? 'all' : 'none';
-  skyCv.style.opacity = name === 'sky' ? '1' : '0';
+  if (name === 'sky') {
+    skyCv.style.pointerEvents = 'all';
+    skyCv.style.opacity = '1';
+    // reload stars in case new uploads happened
+    placeStars();
+  } else {
+    skyCv.style.pointerEvents = 'none';
+    skyCv.style.opacity = '0';
+  }
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   PANEL HELPERS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function openPanel(id) {
   document.getElementById(id).classList.remove('hidden');
   requestAnimationFrame(() => document.getElementById(id).classList.add('open'));
@@ -92,21 +86,15 @@ function closePanel(id) {
   setTimeout(() => document.getElementById(id).classList.add('hidden'), 550);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   TOAST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 let toastTimer;
 function showToast(msg, type = 'ok') {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className   = `show ${type}`;
+  t.className   = 'show ' + type;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.className = type; }, 3200);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   FLOATING LOVE QUOTES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const QUOTES = [
   'you are my favourite kind of forever',
   'every heartbeat whispers your name',
@@ -126,21 +114,16 @@ let qIdx = 0;
 function startQuoteRain() {
   function drop() {
     const q = document.createElement('div');
-    q.style.cssText = `
-      position: fixed;
-      z-index: 600;
-      pointer-events: none;
-      font-family: 'Mrs Saint Delafield', cursive;
-      font-size: clamp(1rem, 2.5vw, 1.5rem);
-      color: rgba(255,45,107,.35);
-      text-shadow: 0 0 30px rgba(255,45,107,.2);
-      left: ${6 + Math.random() * 78}%;
-      top:  ${10 + Math.random() * 70}%;
-      animation: quoteFade 7s ease forwards;
-      max-width: 260px;
-      text-align: center;
-      line-height: 1.4;
-    `;
+    q.style.cssText =
+      'position:fixed;z-index:600;pointer-events:none;' +
+      'font-family:"Mrs Saint Delafield",cursive;' +
+      'font-size:clamp(1rem,2.5vw,1.5rem);' +
+      'color:rgba(255,45,107,.35);' +
+      'text-shadow:0 0 30px rgba(255,45,107,.2);' +
+      'left:' + (6 + Math.random() * 78) + '%;' +
+      'top:'  + (10 + Math.random() * 70) + '%;' +
+      'animation:quoteFade 7s ease forwards;' +
+      'max-width:260px;text-align:center;line-height:1.4;';
     q.textContent = QUOTES[qIdx % QUOTES.length]; qIdx++;
     document.body.appendChild(q);
     setTimeout(() => q.remove(), 7200);
@@ -148,15 +131,12 @@ function startQuoteRain() {
   }
   setTimeout(drop, 6000);
 
-  // inject keyframe
   const s = document.createElement('style');
-  s.textContent = `
-    @keyframes quoteFade {
-      0%   { opacity:0; transform: translateY(14px) scale(.97); }
-      12%  { opacity:1; transform: translateY(0) scale(1); }
-      80%  { opacity:.8; }
-      100% { opacity:0; transform: translateY(-22px); }
-    }
-  `;
+  s.textContent =
+    '@keyframes quoteFade{' +
+    '0%{opacity:0;transform:translateY(14px) scale(.97)}' +
+    '12%{opacity:1;transform:translateY(0) scale(1)}' +
+    '80%{opacity:.8}' +
+    '100%{opacity:0;transform:translateY(-22px)}}';
   document.head.appendChild(s);
 }
