@@ -50,29 +50,17 @@
   <div class="orb orb-3"></div>
 </section>
 
+<!-- NAV — outside #app, always on top -->
+<nav id="edge-nav" style="display:none">
+  <div class="nav-logo">🦉</div>
+  <button class="nav-item active" data-view="sky" onclick="switchView('sky',this)">✦ Sky</button>
+  <button class="nav-item" data-view="constellation" onclick="switchView('constellation',this)">⋆ Stories</button>
+  <button class="nav-item" data-view="garden" onclick="switchView('garden',this)">❋ Gifts</button>
+  <button class="nav-item" data-view="upload" onclick="switchView('upload',this)">↑ Add</button>
+</nav>
+
 <!-- ═══ APP SHELL (hidden until enter) ═══ -->
 <div id="app" class="hidden">
-
-  <!-- TOP NAV — always visible -->
-  <nav id="edge-nav">
-    <div class="nav-logo">🦉</div>
-    <button class="nav-item active" data-view="sky" onclick="switchView('sky',this)">
-      <span class="ni-icon">✦</span>
-      <span class="ni-label">Sky</span>
-    </button>
-    <button class="nav-item" data-view="constellation" onclick="switchView('constellation',this)">
-      <span class="ni-icon">⋆</span>
-      <span class="ni-label">Stories</span>
-    </button>
-    <button class="nav-item" data-view="garden" onclick="switchView('garden',this)">
-      <span class="ni-icon">❋</span>
-      <span class="ni-label">Gifts</span>
-    </button>
-    <button class="nav-item" data-view="upload" onclick="switchView('upload',this)">
-      <span class="ni-icon">↑</span>
-      <span class="ni-label">Add</span>
-    </button>
-  </nav>
 
   <!-- ─── SKY VIEW (photo constellation) ─── -->
   <div class="view active" id="view-sky">

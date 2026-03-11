@@ -45,7 +45,7 @@ async function enterApp() {
   setTimeout(() => {
     document.getElementById('hero').style.display = 'none';
     document.getElementById('app').classList.remove('hidden');
-    // ensure sky is active and canvas is on
+    document.getElementById('edge-nav').style.display = 'flex';
     switchView('sky', document.querySelector('[data-view="sky"]'));
   }, 800);
 }
