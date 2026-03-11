@@ -89,7 +89,7 @@ async function handleFiles(files) {
 
     const folder   = selectedFolder === 'All' ? '' : selectedFolder + '/';
     const safeName = sanitizeFilename(f.name);
-    const path     = folder + Date.now() + '_' + safeName;
+    const path     = folder + Date.now() + '_' + i + '_' + safeName;
 
     const result = await sb.storage.from('memories').upload(path, f, { upsert: true });
 
@@ -117,4 +117,6 @@ async function handleFiles(files) {
   await loadSkyMedia();
   renderFolderOrbit(_folders);
   showToast(done + ' star' + (done !== 1 ? 's' : '') + ' added to the sky ✦', 'ok');
+  // reset so same files can be selected again
+  document.getElementById('file-in').value = '';
 }

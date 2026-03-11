@@ -6,9 +6,9 @@
 <title>🦉 Muskan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Mrs+Saint+Delafield&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/main.css"/>
-<link rel="stylesheet" href="css/aurora.css"/>
-<link rel="stylesheet" href="css/panels.css"/>
+<link rel="stylesheet" href="css/main.css?v=6"/>
+<link rel="stylesheet" href="css/aurora.css?v=6"/>
+<link rel="stylesheet" href="css/panels.css?v=6"/>
 </head>
 <body>
 
@@ -64,6 +64,7 @@
 
   <!-- ─── SKY VIEW (photo constellation) ─── -->
   <div class="view active" id="view-sky">
+    <!-- sky-ui inside view-sky, pills need pointer-events -->
     <div id="sky-ui">
       <div id="sky-header">
         <h2 class="view-title">Our <em>Sky</em></h2>
@@ -71,7 +72,6 @@
       </div>
       <div id="folder-orbit" class="folder-orbit"></div>
     </div>
-    <!-- Stars rendered on sky-canvas -->
     <div id="sky-empty" class="sky-empty hidden">
       <div class="se-owl">🦉</div>
       <p>The sky is empty — add your first memory above</p>
@@ -201,13 +201,13 @@
 <canvas id="sparks-canvas"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js"></script>
-<script src="js/aurora.js"></script>
-<script src="js/sky.js"></script>
-<script src="js/lightbox.js"></script>
-<script src="js/stories.js"></script>
-<script src="js/gifts.js"></script>
-<script src="js/upload.js"></script>
-<script src="js/app.js"></script>
+<script src="js/config.js?v=5"></script>
+<script src="js/aurora.js?v=5"></script>
+<script src="js/sky.js?v=6"></script>
+<script src="js/lightbox.js?v=5"></script>
+<script src="js/stories.js?v=5"></script>
+<script src="js/gifts.js?v=5"></script>
+<script src="js/upload.js?v=5"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>

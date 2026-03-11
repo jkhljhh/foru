@@ -318,8 +318,8 @@ body.cursor-big #cur-aura {
    SKY VIEW HEADER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #sky-ui {
-  position: fixed;
-  top: calc(var(--nav-h) + 1rem);
+  position: absolute;
+  top: 1rem;
   left: 2rem;
   right: 2rem;
   z-index: 25;
@@ -346,6 +346,11 @@ body.cursor-big #cur-aura {
   padding: .3rem .9rem;
   cursor: pointer;
   transition: all .3s;
+  pointer-events: all !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 30;
 }
 .fo-pill:hover, .fo-pill.on {
   border-color: var(--rose);

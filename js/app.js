@@ -63,12 +63,12 @@ function switchView(name, btn) {
   // show/hide sky canvas
   const skyCv = document.getElementById('sky-canvas');
   if (name === 'sky') {
+    skyCv.style.display = 'block';
     skyCv.style.pointerEvents = 'all';
-    skyCv.style.opacity = '1';
     placeStars();
   } else {
+    skyCv.style.display = 'none';
     skyCv.style.pointerEvents = 'none';
-    skyCv.style.opacity = '0';
   }
 }
 
@@ -113,8 +113,8 @@ function startQuoteRain() {
       'position:fixed;z-index:600;pointer-events:none;' +
       'font-family:"Mrs Saint Delafield",cursive;' +
       'font-size:clamp(1rem,2.5vw,1.5rem);' +
-      'color:rgba(255,45,107,.35);' +
-      'text-shadow:0 0 30px rgba(255,45,107,.2);' +
+      'color:rgba(255,255,255,.95);' +
+      'text-shadow:0 0 12px #fff, 0 0 30px rgba(255,255,255,.8), 0 0 60px rgba(255,200,220,.6);' +
       'left:' + (6 + Math.random() * 78) + '%;' +
       'top:'  + (10 + Math.random() * 70) + '%;' +
       'animation:quoteFade 7s ease forwards;' +
