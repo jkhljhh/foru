@@ -222,10 +222,11 @@ body.cursor-big #cur-aura {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #app {
   position: fixed; inset: 0; z-index: 15;
-  pointer-events: none;
+  pointer-events: none; /* sky view uses canvas — re-enabled per view below */
   transition: opacity .6s;
 }
 #app.hidden { opacity: 0; pointer-events: none; }
+#app:not(.hidden) { pointer-events: all; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    EDGE NAV
@@ -313,9 +314,9 @@ body.cursor-big #cur-aura {
   position: absolute; inset: 0;
   display: none;
   padding-left: var(--nav-w);
-  pointer-events: none;
+  pointer-events: none; /* sky view stays none so canvas behind it receives clicks */
 }
-.view:not(#view-sky) {
+.view:not(#view-sky).active {
   pointer-events: all;
 }
 .view.active { display: block; }
